@@ -28,6 +28,12 @@ async function run() {
       res.send(parts);
     });
 
+    app.post("/part", async (req, res) => {
+      const newPart = req.body;
+      const result = await partsCollection.insertOne(newPart);
+      res.send(result);
+    });
+
     app.get("/part/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
