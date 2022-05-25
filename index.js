@@ -95,11 +95,11 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/booking", async (req, res) => {
-      const query = {};
-      const cursor = bookingCollection.find(query);
-      const bookings = await cursor.toArray();
-      res.send(bookings);
+    app.get("/booking/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await bookingCollection.findOne(query);
+      res.send(result);
     });
 
     app.get("/booking/:email", async (req, res) => {
