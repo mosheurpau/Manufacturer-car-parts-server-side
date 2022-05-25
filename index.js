@@ -95,6 +95,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/booking", async (req, res) => {
+      const query = {};
+      const cursor = bookingCollection.find(query);
+      const bookings = await cursor.toArray();
+      res.send(bookings);
+    });
+
     app.get("/booking/:email", async (req, res) => {
       const email = req.params.email;
       console.log(email);
@@ -103,6 +110,13 @@ async function run() {
       const items = await cursor.toArray();
       // console.log(items);
       res.send(items);
+
+      app.delete("/booking/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await bookingCollection.deleteOne(query);
+        res.send(result);
+      });
     });
   } finally {
   }
