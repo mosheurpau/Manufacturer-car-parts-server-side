@@ -50,6 +50,25 @@ async function run() {
       res.send(result);
     });
 
+    // update Quantity
+    app.put("/part/:id", async (req, res) => {
+      const id = req.params.id;
+      const updateQuantity = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          quantity: updateQuantity?.quantity,
+        },
+      };
+      const result = await partsCollection.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+
     app.get("/review", async (req, res) => {
       const query = {};
       const cursor = reviewsCollection.find(query);
