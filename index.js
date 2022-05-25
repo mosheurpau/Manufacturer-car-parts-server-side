@@ -21,6 +21,7 @@ async function run() {
     const userCollection = client.db("car_parts").collection("user");
     const partsCollection = client.db("car_parts").collection("parts");
     const reviewsCollection = client.db("car_parts").collection("reviews");
+    const bookingCollection = client.db("car_parts").collection("booking");
 
     app.get("/part", async (req, res) => {
       const query = {};
@@ -67,6 +68,12 @@ async function run() {
       const users = await userCollection.findOne({ email: email });
       const isAdmin = users?.role === "admin";
       res.send({ admin: isAdmin });
+    });
+
+    app.post("/booking", async (req, res) => {
+      const bookings = req.body;
+      const result = await bookingCollection.insertOne(bookings);
+      res.send(result);
     });
   } finally {
   }
