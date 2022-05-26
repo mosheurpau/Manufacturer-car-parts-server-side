@@ -2,9 +2,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const stripe = require("stripe")(
-  "sk_test_51L3cIVB83u0SRgpBgLw38DxHbLJldZTbqVokVzKcb2nDBf4R6mgR203J419I8F7UmBf6iX2vYo04bdpZE1inE9rU00NAd1he5c"
-);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -93,17 +91,17 @@ async function run() {
       res.send({ admin: isAdmin });
     });
 
-    app.post("/create-payment-intent", async (req, res) => {
-      const service = req.body;
-      const price = service.price;
-      const amount = price * 100;
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount,
-        currency: "usd",
-        payment_method_types: ["card"],
-      });
-      console.log({ clientSecret: paymentIntent.client_secret });
-    });
+    // app.post("/create-payment-intent", async (req, res) => {
+    //   const service = req.body;
+    //   const price = service.price;
+    //   const amount = price * 100;
+    //   const paymentIntent = await stripe.paymentIntents.create({
+    //     amount: amount,
+    //     currency: "usd",
+    //     payment_method_types: ["card"],
+    //   });
+    //   console.log({ clientSecret: paymentIntent.client_secret });
+    // });
 
     app.post("/booking", async (req, res) => {
       const bookings = req.body;
