@@ -2,6 +2,8 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -87,6 +89,18 @@ async function run() {
       const users = await userCollection.findOne({ email: email });
       const isAdmin = users?.role === "admin";
       res.send({ admin: isAdmin });
+    });
+
+    app.post("/create-payment-intent", async (req, res) => {
+      const service = req.body;
+      const price = service.price;
+      const amount = price * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        payment_method_types: ["card"],
+      });
+      console.log({ clientSecret: paymentIntent.client_secret });
     });
 
     app.post("/booking", async (req, res) => {
