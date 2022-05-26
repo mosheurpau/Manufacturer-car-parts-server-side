@@ -2,7 +2,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-// const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -100,7 +100,8 @@ async function run() {
     //     currency: "usd",
     //     payment_method_types: ["card"],
     //   });
-    //   res.send({ clientSecret: paymentIntent?.client_secret });
+
+    //   res.send({ clientSecret: paymentIntent.client_secret });
     // });
 
     app.post("/booking", async (req, res) => {
@@ -109,7 +110,14 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/booking/:id", async (req, res) => {
+    app.get("/booking", async (req, res) => {
+      const query = {};
+      const cursor = bookingCollection.find(query);
+      const bookings = await cursor.toArray();
+      res.send(bookings);
+    });
+
+    app.get("/orders/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await bookingCollection.findOne(query);
@@ -122,15 +130,15 @@ async function run() {
       const query = { email: email };
       const cursor = await bookingCollection.find(query);
       const items = await cursor.toArray();
-      // console.log(items);
+      console.log(items);
       res.send(items);
+    });
 
-      app.delete("/booking/:id", async (req, res) => {
-        const id = req.params.id;
-        const query = { _id: ObjectId(id) };
-        const result = await bookingCollection.deleteOne(query);
-        res.send(result);
-      });
+    app.delete("/booking/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await bookingCollection.deleteOne(query);
+      res.send(result);
     });
   } finally {
   }
