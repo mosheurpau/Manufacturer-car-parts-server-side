@@ -2,7 +2,9 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(
+  "sk_test_51L3cIVB83u0SRgpBgLw38DxHbLJldZTbqVokVzKcb2nDBf4R6mgR203J419I8F7UmBf6iX2vYo04bdpZE1inE9rU00NAd1he5c"
+);
 
 const app = express();
 const port = process.env.PORT || 5000;
