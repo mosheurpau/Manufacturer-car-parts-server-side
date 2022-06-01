@@ -24,7 +24,7 @@ async function run() {
     const partsCollection = client.db("car_parts").collection("parts");
     const reviewsCollection = client.db("car_parts").collection("reviews");
     const bookingCollection = client.db("car_parts").collection("booking");
-    const paymentCollection = client.db("car_parts").collection("payment");
+    const paymentCollection = client.db("car_parts").collection("payments");
 
     app.get("/part", async (req, res) => {
       const query = {};
