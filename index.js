@@ -24,6 +24,7 @@ async function run() {
     const partsCollection = client.db("car_parts").collection("parts");
     const reviewsCollection = client.db("car_parts").collection("reviews");
     const bookingCollection = client.db("car_parts").collection("booking");
+    const paymentCollection = client.db("car_parts").collection("payment");
 
     app.get("/part", async (req, res) => {
       const query = {};
@@ -108,6 +109,25 @@ async function run() {
       const bookings = req.body;
       const result = await bookingCollection.insertOne(bookings);
       res.send(result);
+    });
+
+    app.patch("/booking/:id", async (req, res) => {
+      const id = req.params.id;
+      const payment = req.body;
+      const filter = { _id: ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          paid: true,
+          transactionId: payment.transactionId,
+        },
+      };
+
+      const result = await paymentCollection.insertOne(payment);
+      const updatedBooking = await bookingCollection.updateOne(
+        filter,
+        updatedDoc
+      );
+      res.send(updatedBooking);
     });
 
     app.get("/booking", async (req, res) => {
